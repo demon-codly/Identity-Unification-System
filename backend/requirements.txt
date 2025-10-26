@@ -1,0 +1,10 @@
+Flask==3.0.0
+Flask-CORS==4.0.0
+supabase==2.3.0
+python-dotenv==1.0.0
+phonenumbers==8.13.26
+email-validator==2.1.0
+gunicorn==21.2.0
+gotrue==2.1.0
+rapidfuzz==3.5.2
+phonetics==1.0.5
