@@ -4,7 +4,7 @@ services:
   # Flask Backend API
   backend:
     build:
-      context: ./backend
+      context: ./backend        # This tells Docker to look in backend folder
       dockerfile: Dockerfile
     container_name: identity_backend
     ports:
@@ -14,13 +14,11 @@ services:
       - FLASK_DEBUG=${FLASK_DEBUG:-0}
       - SUPABASE_URL=${SUPABASE_URL}
       - SUPABASE_KEY=${SUPABASE_KEY}
-    volumes:
-      - ./backend:/app
     restart: unless-stopped
     networks:
       - identity-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/api/v1/health"]
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:5000/api/v1/health')"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -29,16 +27,13 @@ services:
   # React Frontend
   frontend:
     build:
-      context: ./frontend
+      context: ./frontend       # This tells Docker to look in frontend folder
       dockerfile: Dockerfile
-      args:
-        - VITE_API_URL=${VITE_API_URL:-http://localhost:5000/api/v1}
     container_name: identity_frontend
     ports:
       - "3000:80"
     depends_on:
-      backend:
-        condition: service_healthy
+      - backend
     restart: unless-stopped
     networks:
       - identity-network
